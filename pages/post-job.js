@@ -3,21 +3,27 @@ import SearchBar from "../components/search-bar";
 import Nav from "../components/nav";
 import PostPreview from "../components/post-preview";
 // import EditorJs from 'react-editor-js';
-import dynamic from "next/dynamic"
+import dynamic from "next/dynamic";
 import SunEditor from "../components/suneditor";
 
 const EditorJs = dynamic(
   () => {
     return import("react-editor-js");
   },
-  {ssr: false}
-)
+  { ssr: false }
+);
 
 export default function PostJob() {
   const [job, setJob] = useState(false);
   const [jobType, setJobType] = useState("full-time");
   const [applyMethod, setApplyMethod] = useState("applyEmail");
   const [PreviewJob, setPreviewJob] = useState(false);
+  const [descriptionData, setDescriptionData] = useState('');
+
+
+const descriptionChange = (data) => {
+  setDescriptionData(data);
+}
 
   const PreviewJobData = (event) => {
     event.preventDefault();
@@ -27,7 +33,7 @@ export default function PostJob() {
       workLocation: event.target.workLocation.value,
       jobLocation: event.target.jobLocation.value,
       jobType,
-      description: event.target.description.value,
+      description: descriptionData,
       minWage: event.target.minWage.value,
       maxWage: event.target.maxWage.value,
       currency: event.target.currency.value,
@@ -39,13 +45,14 @@ export default function PostJob() {
       applyMethod,
       applyEmail: event.target.applyEmail.value,
       applyUrl: event.target.applyUrl.value,
-      date : new Date().toLocaleString()
+      date: new Date().toLocaleString(),
     };
 
     setJob(jobData);
   };
 
   console.log(job);
+  console.log(descriptionData)
 
   return (
     <>
@@ -124,8 +131,23 @@ export default function PostJob() {
               </div>
             </div>
             <div className="flex py-2">
-              <div className="w-32  text-right pr-6">Description</div>
-              <SunEditor />
+              <div className="w-32  text-right mr-5">Description</div>
+              <div className="w-full  ml-auto">
+                <SunEditor setOptions={{
+                  height: 300,
+                  buttonList: [
+                    ['undo', 'redo'],
+                    ['fontSize', 'formatBlock'],
+                    ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript'],
+                    ['removeFormat'],
+                    ['outdent', 'indent'],
+                    ['align', 'horizontalRule', 'list'],
+                    ['link'],
+                ]
+                }}
+                
+                onChange={descriptionChange}/>
+              </div>
             </div>
             <div className="flex py-2">
               <div className="w-32 self-center text-right pr-6">
