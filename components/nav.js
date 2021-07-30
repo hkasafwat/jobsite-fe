@@ -1,16 +1,28 @@
+import Link from "next/link";
+
 export default function Nav() {
   return (
     <div className="bg-gray-200 p-4">
       <div className="flex">
-        <div className="flex-start">JobSite</div>
+        <Link href="/">
+          <a className="flex-start">JobSite</a>
+        </Link>
         <div className="ml-auto flex space-x-4">
-          <a href="#">All Jobs</a>
-          <a href="#">Post a Job</a>
+          <Link href="/">
+            <a>All Jobs</a>
+          </Link>
+          <Link href="/post-job">
+            <a>Post a Job</a>
+          </Link>
           <p>|</p>
-          <a href="#">Login</a>
-          <a href="#">Register</a>
+          <Link href="/login">
+            <a>login</a>
+          </Link>
+          <Link href="/register">
+            <a>Register</a>
+          </Link>
         </div>
       </div>
     </div>
-  )
+  );
 }

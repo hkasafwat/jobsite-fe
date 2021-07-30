@@ -5,7 +5,7 @@ import SearchBar from "../../components/search-bar";
 export default function jobs() {
   const router = useRouter();
   const { slug } = router.query;
-
+  console.log(slug)
   return (
     <>
       <Nav />
