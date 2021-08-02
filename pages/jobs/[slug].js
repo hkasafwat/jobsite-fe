@@ -1,11 +1,11 @@
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import Nav from "../../components/nav";
 import SearchBar from "../../components/search-bar";
 
-export default function jobs() {
+export default function jobs({ post }) {
   const router = useRouter();
   const { slug } = router.query;
-  console.log(slug)
+  
   return (
     <>
       <Nav />
@@ -96,9 +96,39 @@ export default function jobs() {
           </ul>
         </div>
         <div className="flex justify-center mt-4">
-        <button className="bg-purple-200 mx-auto p-4">Apply</button>
+          <button className="bg-purple-200 mx-auto p-4">Apply</button>
         </div>
       </div>
     </>
   );
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: true
+  }
+}
+
+export async function getStaticProps({params}) {
+  const res = await fetch("http://localhost:8080/jobs/retrieve-job", {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+    },
+    body:  JSON.stringify(params),
+  });
+  const data = await res.json();
+  console.log(data)
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: { data },
+    revalidate: 1
+  };
 }

@@ -6,10 +6,11 @@ export default function JobCard(props) {
     title,
     subtitle,
     type,
-    description,
     company_name,
     company_logo,
-    city,
+    job_location,
+    work_location,
+    date,
   } = props;
 
   return (
@@ -24,9 +25,14 @@ export default function JobCard(props) {
           </div>
           <div className="ml-6 flex-grow">
             <div className="text-xl">{title}</div>
-            <div className="text-md">Safwat Tech, London, UK</div>
+            <div className="text-md">
+              {company_name}, {job_location}
+            </div>
+            <div className="text-md">
+              {type}, {work_location}
+            </div>
           </div>
-          <div className="px-2">July 14th</div>
+          <div className="px-2">{date}</div>
         </div>
       </a>
     </Link>

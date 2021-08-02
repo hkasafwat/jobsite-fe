@@ -17,6 +17,11 @@ export default function Home({ posts }) {
             slug={post.slug}
             title={post.title}
             subtitle={post.subtitle}
+            company_name={post.company_name}
+            job_location={post.job_location}
+            type={post.type}
+            work_location={post.work_location}
+            date={new Date(post.created_at).toDateString()}
           />
         ))}
       </div>
