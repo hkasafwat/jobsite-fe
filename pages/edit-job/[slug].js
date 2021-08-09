@@ -1,13 +1,25 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import Nav from "../components/nav";
-import SunEditor from "../components/suneditor";
+import Nav from "../../components/nav";
+import SunEditor from "../../components/suneditor";
 
-export default function PostJob() {
-  const [jobType, setJobType] = useState("full-time");
-  const [applyMethod, setApplyMethod] = useState("applyEmail");
-  const [PreviewJob, setPreviewJob] = useState(false);
-  const [descriptionData, setDescriptionData] = useState("");
+export default function PostJob({ post }) {
+  const [title, setTitle] = useState(post.title);
+  const [workLocation, setWorkLocation] = useState(post.work_location);
+  const [jobLocation, setJobLocation] = useState(post.job_location);
+  const [jobType, setJobType] = useState(post.type);
+  const [descriptionData, setDescriptionData] = useState(post.description);
+  const [minWage, setMinWage] = useState(post.min_wage);
+  const [maxWage, setMaxWage] = useState(post.max_wage);
+  const [currency, setCurrency] = useState(post.currency);
+  const [salaryTimeframe, setSalaryTimeframe] = useState(post.salary_timeframe);
+  const [benefits, setBenefits] = useState(post.benefits);
+  const [companyName, setCompanyName] = useState(post.company_name);
+  const [companyUrl, setCompanyUrl] = useState(post.company_url);
+  const [companyLogo, setCompanyLogo] = useState(post.company_logo);
+  const [applyMethod, setApplyMethod] = useState(post.apply_method);
+  const [applyEmail, setApplyEmail] = useState(post.apply_email);
+  const [applyUrl, setApplyUrl] = useState(post.apply_url);
   const [errors, setErrors] = useState(false);
   const router = useRouter();
 
@@ -19,29 +31,30 @@ export default function PostJob() {
     event.preventDefault();
 
     let jobData = {
-      title: event.target.jobTitle.value,
-      work_location: event.target.workLocation.value,
-      job_location: event.target.jobLocation.value,
+      title: title,
+      slug: router.query.slug,
+      work_location: workLocation,
+      job_location: jobLocation,
       type: jobType,
       description: descriptionData,
-      min_wage: event.target.minWage.value,
-      max_wage: event.target.maxWage.value,
-      currency: event.target.currency.value,
-      salary_timeframe: event.target.salarytimeframe.value,
-      benefits: event.target.benefits.value,
-      company_name: event.target.companyName.value,
-      company_url: event.target.companyUrl.value,
-      company_logo: event.target.companyLogo.value,
+      min_wage: minWage,
+      max_wage: maxWage,
+      currency: currency,
+      salary_timeframe: salaryTimeframe,
+      benefits: benefits,
+      company_name: companyName,
+      company_url: companyUrl,
+      company_logo: companyLogo,
       apply_method: applyMethod,
-      apply_email: event.target.applyEmail.value,
-      apply_url: event.target.applyUrl.value,
+      apply_email: applyEmail,
+      apply_url: applyUrl,
     };
-    console.log(descriptionData)
-    // postJob(jobData);
+    console.log(jobData);
+    postJob(jobData);
   };
 
   const postJob = async (jobData) => {
-    await fetch("http://localhost:8080/jobs/post-job", {
+    await fetch("http://localhost:8080/jobs/edit-job", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -51,12 +64,12 @@ export default function PostJob() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if(data.errors) {
-          setErrors(data.errors)
+        console.log(data);
+        if (data.errors) {
+          setErrors(data.errors);
         } else {
-          router.push(`/jobs/${data.slug}`)
+          router.push(`/jobs/${data.slug}`);
         }
-
       });
   };
 
@@ -69,8 +82,12 @@ export default function PostJob() {
           {errors ? (
             <>
               <div className="flex">
-              <div className="w-32  text-right"></div>
-              <div className=" py-3 mb-3 flex-1 rounded bg-red-600 flex"><span className="font-bold text-white pl-4 text-lg">There seems to be some errors</span></div>
+                <div className="w-32  text-right"></div>
+                <div className=" py-3 mb-3 flex-1 rounded bg-red-600 flex">
+                  <span className="font-bold text-white pl-4 text-lg">
+                    There seems to be some errors
+                  </span>
+                </div>
               </div>
             </>
           ) : (
@@ -79,14 +96,13 @@ export default function PostJob() {
           {errors &&
             errors.map((error) => (
               <>
-              <div className="flex">
-              <div className="w-32  text-right"></div>
-              <div className=" text-center m-0 text-red-600 text-lg font-bold mb-3">
-                * {Object.values(error)}
-              </div>
-              </div>
-            </>
-              
+                <div className="flex">
+                  <div className="w-32  text-right"></div>
+                  <div className=" text-center m-0 text-red-600 text-lg font-bold mb-3">
+                    * {Object.values(error)}
+                  </div>
+                </div>
+              </>
             ))}
           <div className="flex py-2">
             <div className="w-32 self-center text-right pr-6">Job Title</div>
@@ -94,11 +110,18 @@ export default function PostJob() {
               type="text"
               id="jobTitle"
               className="p-2 flex-1 rounded border"
+              value={title}
+              onChange={() => setTitle(event.target.value)}
             />
           </div>
           <div className="flex py-2">
             <div className="w-32 self-center text-right pr-6">Job Location</div>
-            <select id="workLocation" className="p-2 mr-3 rounded border">
+            <select
+              id="workLocation"
+              className="p-2 mr-3 rounded border"
+              value={workLocation}
+              onChange={() => setWorkLocation(event.target.value)}
+            >
               <option>On site</option>
               <option>Remote</option>
               <option>Temporarily Remote</option>
@@ -108,6 +131,8 @@ export default function PostJob() {
               id="jobLocation"
               className="p-2 flex-1 rounded border"
               placeholder="London, UK"
+              value={jobLocation}
+              onChange={() => setJobLocation(event.target.value)}
             />
           </div>
           {/* Radio group for job type  */}
@@ -116,42 +141,47 @@ export default function PostJob() {
             onChange={() => setJobType(event.target.value)}
           >
             <div className="w-32 self-center text-right pr-6">Job Type</div>
-            <div className="mr-4">
-              <input
-                type="radio"
-                value="full-time"
-                className="mr-1"
-                name="group"
-                defaultChecked
-              />
-              <label htmlFor="full-time">Full Time</label>
-            </div>
-            <div className="mr-4">
-              <input
-                type="radio"
-                value="part-time"
-                className="mr-1"
-                name="group"
-              />
-              <label htmlFor="part-time">Part Time</label>
-            </div>
-            <div className="mr-4">
-              <input
-                type="radio"
-                value="freelance"
-                className="mr-1"
-                name="group"
-              />
-              <label htmlFor="freelance">Freelance</label>
-            </div>
-            <div className="mr-4">
-              <input
-                type="radio"
-                value="temporary"
-                className="mr-1"
-                name="group"
-              />
-              <label htmlFor="temporary">Temporary</label>
+            <div className="flex" onChange={() => setJobType(event.target.value)}>
+              <div className="mr-4">
+                <input
+                  type="radio"
+                  value="full-time"
+                  className="mr-1"
+                  name="group"
+                  checked={jobType == "full-time"}
+                />
+                <label htmlFor="full-time">Full Time</label>
+              </div>
+              <div className="mr-4">
+                <input
+                  type="radio"
+                  value="part-time"
+                  className="mr-1"
+                  name="group"
+                  checked={jobType == "part-time"}
+                />
+                <label htmlFor="part-time">Part Time</label>
+              </div>
+              <div className="mr-4">
+                <input
+                  type="radio"
+                  value="freelance"
+                  className="mr-1"
+                  name="group"
+                  checked={jobType == "freelance"}
+                />
+                <label htmlFor="freelance">Freelance</label>
+              </div>
+              <div className="mr-4">
+                <input
+                  type="radio"
+                  value="temporary"
+                  className="mr-1"
+                  name="group"
+                  checked={jobType == "temporary"}
+                />
+                <label htmlFor="temporary">Temporary</label>
+              </div>
             </div>
           </div>
           <div className="flex py-2">
@@ -178,6 +208,7 @@ export default function PostJob() {
                   ],
                 }}
                 onChange={descriptionChange}
+                defaultValue={post.description}
               />
             </div>
           </div>
@@ -188,14 +219,23 @@ export default function PostJob() {
               type="text"
               className="p-2 flex-1 mr-3 rounded border"
               placeholder="Minimum wage"
+              value={minWage}
+              onChange={() => setMinWage(event.target.value)}
             />
             <input
               id="maxWage"
               type="text"
               className="p-2 flex-1 mr-3 rounded border"
               placeholder="Maximum wage"
+              value={maxWage}
+              onChange={() => setMaxWage(event.target.value)}
             />
-            <select id="currency" className="p-2 mr-3 rounded border">
+            <select
+              id="currency"
+              className="p-2 mr-3 rounded border"
+              value={currency}
+              onChange={() => setCurrency(event.target.value)}
+            >
               <option value="USD" data-symbol="$">
                 USD
               </option>
@@ -221,7 +261,12 @@ export default function PostJob() {
                 SAR
               </option>
             </select>
-            <select id="salarytimeframe" className="p-2 pr rounded border">
+            <select
+              id="salarytimeframe"
+              className="p-2 pr rounded border"
+              value={salaryTimeframe}
+              onChange={() => setSalaryTimeframe(event.target.value)}
+            >
               <option selected="selected" value="annually">
                 Annually
               </option>
@@ -240,6 +285,8 @@ export default function PostJob() {
               type="text"
               placeholder="Additional compensation information (benefits, etc.)"
               className="p-2 flex-1 rounded border"
+              value={benefits}
+              onChange={() => setBenefits(event.target.value)}
             />
           </div>
           <div className="flex py-2">
@@ -248,6 +295,8 @@ export default function PostJob() {
               id="companyName"
               type="text"
               className="p-2 flex-1 rounded border"
+              value={companyName}
+              onChange={() => setCompanyName(event.target.value)}
             />
           </div>
           <div className="flex py-2">
@@ -256,6 +305,8 @@ export default function PostJob() {
               id="companyUrl"
               type="text"
               className="p-2 flex-1 rounded border"
+              value={companyUrl}
+              onChange={() => setCompanyUrl(event.target.value)}
             />
           </div>
           <div className="flex py-2">
@@ -264,6 +315,8 @@ export default function PostJob() {
               id="companyLogo"
               type="text"
               className="p-2 flex-1 rounded border"
+              value={companyLogo}
+              onChange={() => setCompanyLogo(event.target.value)}
             />
           </div>
           {/* Radio group for apply method  */}
@@ -279,7 +332,7 @@ export default function PostJob() {
                 name="applyGroup"
                 value="applyEmail"
                 className="mr-1"
-                defaultChecked
+                checked={applyMethod == "applyEmail"}
               />
               <label htmlFor="temporary">Apply By Email</label>
             </div>
@@ -288,8 +341,9 @@ export default function PostJob() {
                 id="applyUrl"
                 type="radio"
                 name="applyGroup"
-                value="applyURL"
+                value="applyUrl"
                 className="mr-1"
+                checked={applyMethod == "applyUrl"}
               />
               <label htmlFor="temporary">Apply By URL</label>
             </div>
@@ -302,6 +356,8 @@ export default function PostJob() {
                 id="applyEmailInput"
                 placeholder="Enter Email"
                 className="p-2 flex-1 rounded border"
+                value={applyEmail}
+                onChange={() => setApplyEmail(event.target.value)}
               />
             ) : (
               <input
@@ -309,16 +365,47 @@ export default function PostJob() {
                 id="applyUrlInput"
                 placeholder="Enter URL"
                 className="p-2 flex-1 rounded border"
+                value={applyUrl}
+                onChange={() => setApplyUrl(event.target.value)}
               />
             )}
           </div>
           <div className="flex mt-4">
             <button className="mx-auto p-4 bg-purple-200 hover:bg-purple-300 rounded shadow font-bold">
-              Post Job
+              Edit Job
             </button>
           </div>
         </div>
       </form>
     </>
   );
+}
+
+export async function getStaticProps({ params }) {
+  const res = await fetch("http://localhost:8080/jobs/retrieve-job", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(params),
+  });
+  const post = await res.json();
+
+  if (!post) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: { post },
+  };
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
 }

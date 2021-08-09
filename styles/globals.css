@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url(unreset.css);
 
 html,
 body {
@@ -17,4 +18,12 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.animate {
+  transition: transform .35s ease-in-out;
+}
+
+.animate.grow {
+  transform: scale(1.5);
 }

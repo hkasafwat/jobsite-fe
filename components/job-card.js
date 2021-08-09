@@ -14,10 +14,10 @@ export default function JobCard(props) {
   } = props;
 
   return (
-    <Link href={"/jobs/" + slug}>
+    <Link href={`/jobs/${slug}`}>
       <a
         href
-        className="shadow p-4 bg-purple-200 hover:bg-purple-300 hover:shadow-lg flex flex-col rounded-sm "
+        className="shadow p-4 bg-purple-200 hover:bg-purple-300 hover:shadow-lg flex flex-col rounded-sm cursor-pointer"
       >
         <div className="flex">
           <div>
