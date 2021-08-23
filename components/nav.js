@@ -1,6 +1,17 @@
 import Link from "next/link";
-
+import { useEffect, useState } from "react";
+import { useAppContext } from "../context/state";
 export default function Nav() {
+  const {user, dispatchEvent} = useAppContext();
+  
+  // const [user, setUser] = useState(null);
+  // useEffect(() => {
+  //   const value = localStorage.getItem("jobsite_user");
+  //   const user = !!value ? JSON.parse(value) : undefined;
+  //   setUser(user);
+  // }, []);
+
+  console.log(user);
   return (
     <div className="bg-gray-200 p-4">
       <div className="flex">
@@ -15,12 +26,27 @@ export default function Nav() {
             <a>Post a Job</a>
           </Link>
           <p>|</p>
-          <Link href="/login">
-            <a>login</a>
-          </Link>
-          <Link href="/register">
-            <a>Register</a>
-          </Link>
+          {user ? (
+            <>
+              <Link href={`/profile/${user.id}`}>
+                <a>
+                  {user.firstName} {user.lastName}
+                </a>
+              </Link>
+              <Link href="/login">
+                <a onClick={() => dispatchEvent("LOGOUT")}>Logout</a>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <a>login</a>
+              </Link>
+              <Link href="/register">
+                <a>Register</a>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

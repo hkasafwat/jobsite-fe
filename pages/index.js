@@ -1,11 +1,15 @@
+import { useContext } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Nav from "../components/nav";
 import JobCard from "../components/job-card";
 import SearchBar from "../components/search-bar";
+import { useAppContext } from "../context/state";
 
 export default function Home({ posts }) {
+  const { user }  = useAppContext()
+  console.log(user)
   return (
     <>
       <Nav />

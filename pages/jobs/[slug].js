@@ -29,12 +29,12 @@ export default function jobs({ post }) {
       <SearchBar />
       <div className="max-w-4xl bg-gray-100 p-4 m-auto mt-12 border rounded">
         <div className=" flex mb-3">
-         <Link href={`/edit-job/${slug}`} >
-         <button className="ml-auto mr-4 p-2 bg-yellow-400 rounded w-24 font-bold">
-            Edit
-          </button>
-         </Link>
-         <Delete slug={slug} />
+          <Link href={`/edit-job/${slug}`}>
+            <button className="ml-auto mr-4 p-2 bg-yellow-400 rounded w-24 font-bold">
+              Edit
+            </button>
+          </Link>
+          <Delete slug={slug} />
         </div>
         <hr className="mb-3" />
         <div className="flex">
