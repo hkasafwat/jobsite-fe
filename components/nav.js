@@ -11,7 +11,6 @@ export default function Nav() {
   //   setUser(user);
   // }, []);
 
-  console.log(user);
   return (
     <div className="bg-gray-200 p-4">
       <div className="flex">

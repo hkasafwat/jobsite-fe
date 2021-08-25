@@ -1,19 +1,19 @@
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { useState } from "react";
+
 import Nav from "../../components/nav";
 import SearchBar from "../../components/search-bar";
 import EmailModal from "../../components/email-modal";
 import Delete from "../../components/delete-btn";
+import { useAppContext } from "../../context/state";
+
 export default function jobs({ post }) {
+  const {user} = useAppContext();
   const [emailModal, setEmailModal] = useState(false);
   const [hideModal, setHideModal] = useState(true);
   const router = useRouter();
   const { slug } = router.query;
-
-  const deletePost = () => {
-    console.log(slug);
-  };
 
   if (router.isFallback) {
     return (
@@ -22,7 +22,7 @@ export default function jobs({ post }) {
       </>
     );
   }
-
+  
   return (
     <>
       <Nav />
@@ -90,7 +90,7 @@ export async function getStaticProps({ params }) {
   const res = await fetch("http://localhost:8080/jobs/retrieve-job", {
     method: "POST",
     headers: {
-      Accept: "application/json",
+      "Accept": "application/json",
       "Content-Type": "application/json",
     },
     body: JSON.stringify(params),

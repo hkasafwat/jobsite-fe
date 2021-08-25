@@ -18,6 +18,7 @@ export default function Home({ posts }) {
         <p className="text-2xl mb-6">Latest Jobs</p>
         {posts.map((post) => (
           <JobCard
+          key={post.slug}
             slug={post.slug}
             title={post.title}
             subtitle={post.subtitle}
@@ -34,13 +35,8 @@ export default function Home({ posts }) {
 }
 
 export async function getStaticProps(context) {
-  let token = {
-    "x-access-token":
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjBmMWNmYzQ4M2Q4OWEyNTk0MzczMmNkIiwiZW1haWwiOiJoaXNoYW1AdGVzdC5jb20iLCJpYXQiOjE2MjczODQ3MjksImV4cCI6MTYyNzM5MTkyOX0.tNpUb2ZuvCNGRtNkRd_VkWpD0nxxqxXwVbqbkpdkKTc",
-  };
   const res = await fetch(`http://localhost:8080/jobs`, {
     method: "GET",
-    headers: token,
   });
   const posts = await res.json();
 

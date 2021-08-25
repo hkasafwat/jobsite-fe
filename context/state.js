@@ -22,14 +22,23 @@ export function AppWrapper({ children }) {
   const dispatchEvent = (actionType, payload) => {
     switch (actionType) {
       case "LOGIN":
-        localStorage.setItem("jobsite_user", JSON.stringify(payload));
-        return;
+
+        if(payload.rememberMe) {
+          localStorage.setItem("jobsite_user", JSON.stringify(payload.user));
+        }
+
+        setUser(payload.user);
+        return user;
       case "REGISTER":
+        
+        if(payload.rememberMe) {
+          localStorage.setItem("jobsite_user", JSON.stringify(payload.user));
+        }
+
         setUser(payload);
-        return;
+        return user;
       case "LOGOUT":
         localStorage.removeItem('jobsite_user');
-        location.reload();
         return;
 
     }

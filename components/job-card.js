@@ -16,7 +16,6 @@ export default function JobCard(props) {
   return (
     <Link href={`/jobs/${slug}`}>
       <a
-        href
         className="shadow p-4 bg-purple-200 hover:bg-purple-300 hover:shadow-lg flex flex-col rounded-sm cursor-pointer"
       >
         <div className="flex">

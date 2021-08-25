@@ -1,16 +1,20 @@
 import { useState, useContext } from "react";
-import { useAppContext } from '../context/state'
+import { useAppContext } from "../context/state";
+import { useRouter } from "next/router";
 import Nav from "../components/nav";
 
 export default function Login() {
-  const { dispatchEvent} = useAppContext();
+  const router = useRouter();
+
+  const { dispatchEvent } = useAppContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   const login = async (event) => {
     event.preventDefault();
-    console.log(email, password)
+
     fetch("http://localhost:8080/login", {
       method: "POST",
       headers: {
@@ -21,14 +25,18 @@ export default function Login() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
-        dispatchEvent('LOGIN', {
-          id: data._id,
-          firstName: data.first_name,
-          lastName: data.last_name,
-          email: data.email,
-          token: data.token
-        })
+        dispatchEvent("LOGIN", {
+          rememberMe: rememberMe,
+          user: {
+            id: data._id,
+            firstName: data.first_name,
+            lastName: data.last_name,
+            email: data.email,
+            token: data.token,
+          },
+        });
+
+        router.push(`/profile/${data._id}`);
       });
   };
 
@@ -62,14 +70,12 @@ export default function Login() {
               name="keepSignedIn"
               type="checkbox"
               className="self-center mr-2"
+              onChange={() => setRememberMe(!rememberMe)}
             />
             <label htmlFor="keepSignedIn">Keep me signed in</label>
           </div>
           <button className="bg-purple-300 hover:bg-purple-400 py-2 px-5 rounded shadow text-xl font-bold mx-auto mb-6 mt-4 w-full">
             Sign In
-          </button>
-          <button className="text-sm text-purple-400 hover:text-purple-600">
-            Forgot your password?
           </button>
           <button className="text-sm text-purple-400 hover:text-purple-600 mt-2">
             Register
