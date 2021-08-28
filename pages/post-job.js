@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useAppContext } from "../context/state";
 import Nav from "../components/nav";
 import SunEditor from "../components/suneditor";
 
 export default function PostJob() {
+  const { user } = useAppContext();
+
   const [jobType, setJobType] = useState("full-time");
   const [applyMethod, setApplyMethod] = useState("applyEmail");
-  const [PreviewJob, setPreviewJob] = useState(false);
   const [descriptionData, setDescriptionData] = useState("");
   const [errors, setErrors] = useState(false);
   const router = useRouter();
@@ -36,8 +38,8 @@ export default function PostJob() {
       apply_email: event.target.applyEmail.value,
       apply_url: event.target.applyUrl.value,
     };
-    console.log(descriptionData)
-    // postJob(jobData);
+
+    postJob(jobData);
   };
 
   const postJob = async (jobData) => {
@@ -51,14 +53,19 @@ export default function PostJob() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if(data.errors) {
+        if (data.errors) {
           setErrors(data.errors)
-        } else {
+        }
+        else {
           router.push(`/jobs/${data.slug}`)
         }
 
       });
   };
+
+  if(user == undefined || user == null) {
+    router.push('/login');
+  }
 
   return (
     <>
@@ -69,8 +76,8 @@ export default function PostJob() {
           {errors ? (
             <>
               <div className="flex">
-              <div className="w-32  text-right"></div>
-              <div className=" py-3 mb-3 flex-1 rounded bg-red-600 flex"><span className="font-bold text-white pl-4 text-lg">There seems to be some errors</span></div>
+                <div className="w-32  text-right"></div>
+                <div className=" py-3 mb-3 flex-1 rounded bg-red-600 flex"><span className="font-bold text-white pl-4 text-lg">There seems to be some errors</span></div>
               </div>
             </>
           ) : (
@@ -79,14 +86,14 @@ export default function PostJob() {
           {errors &&
             errors.map((error) => (
               <>
-              <div className="flex">
-              <div className="w-32  text-right"></div>
-              <div className=" text-center m-0 text-red-600 text-lg font-bold mb-3">
-                * {Object.values(error)}
-              </div>
-              </div>
-            </>
-              
+                <div className="flex">
+                  <div className="w-32  text-right"></div>
+                  <div className=" text-center m-0 text-red-600 text-lg font-bold mb-3">
+                    * {Object.values(error)}
+                  </div>
+                </div>
+              </>
+
             ))}
           <div className="flex py-2">
             <div className="w-32 self-center text-right pr-6">Job Title</div>
